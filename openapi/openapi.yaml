@@ -78,7 +78,7 @@ paths:
     post:
       tags:
         - devices
-      summary: Creates or update a device
+      summary: Creates or updates a device
       description: Creates or updates a device
       requestBody:
         content:
@@ -135,8 +135,6 @@ paths:
           description: Successful operation
         '400':
           description: Invalid ID supplied
-        '403':
-          description: Device is linked to a location, first remove relation and then remove device
         '404':
           description: Device not found
 
@@ -166,33 +164,150 @@ paths:
         '404':
           description: Device not found
 
+  /locations:
+    get:
+      tags:
+        - locations
+      summary: Lists existing locations
+      description: Lists existing locations
+      parameters:
+        - name: locationId
+          in: query
+          description: Location identifier filter for query.
+          required: false
+          schema:
+            type: integer
+            format: int16
+        - name: locationName
+          in: query
+          description: Location name filter for query.
+          required: false
+          schema:
+            type: string
+        - name: locationType
+          in: query
+          description: Location type filter for query.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/locations'
+        '400':
+          description: Invalid filter
+        '404':
+          description: Location not found
+
+    post:
+      tags:
+        - locations
+      summary: Creates or updates a location
+      description: Creates or updates a location
+      requestBody:
+        content:
+          application/json:
+            schema:
+                $ref: '#/components/schemas/locations'
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid input
+
+  /locations/{locationId}:
+    get:
+      tags:
+        - locations
+      summary: Finds location by ID
+      description: Returns a single location
+      parameters:
+        - name: locationId
+          in: path
+          description: ID of location to return
+          required: true
+          schema:
+            type: integer
+            format: int16
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/locations'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Location not found
+
+    delete:
+      tags:
+        - locations
+      summary: Deletes a location
+      description: Deletes a location from the database
+      parameters:
+        - name: locationId
+          in: path
+          description: Location identifier to delete
+          required: true
+          schema:
+            type: integer
+            format: int16 
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Location not found
+        '412':
+          description: Location has linked devices. Remove devices first or link them to another location
+
 components:
   schemas:
     devices-put:
+      required:
+        - locationId
       type: object
       properties:
-        location_name:
-          type: string
-          example: Building A
+        locationId:
+          type: integer
+          format: int16
+          example: 12568
+          description: Location identifier where device is placed
 
     devices-post:
       required:
         - serialNumber
+        - name
+        - type
+        - locationId
       type: object
       properties:
         serialNumber:
           type: integer
           format: int16
           example: 48356
+          description: Serial Number of device
         name:
           type: string
           example: XLN3 Light Sensor
+          description: Name of device
         type:
           type: string
           description: Type of device
           enum:
             - Sensor
             - Actuator
+        locationId:
+          type: integer
+          format: int16
+          example: 12568
+          description: Location identifier where device is placed
 
     devices-get:
       required:
@@ -200,15 +315,20 @@ components:
         - name
         - type
         - creationDate
+        - locationId
+        - locationName
+        - locationType
       type: object
       properties:
         serialNumber:
           type: integer
           format: int16
           example: 48356
+          description: Serial Number of device
         name:
           type: string
           example: XLN3 Light Sensor
+          description: Name of device
         type:
           type: string
           description: Type of device
@@ -219,5 +339,45 @@ components:
           type: string
           description: Date of device creation
           example: "2024-04-02 14:39:45"
+        locationId:
+          type: integer
+          format: int16
+          example: 12568
+          description: Location identifier where device is placed
+        locationName:
+          type: string
+          example: Manufacturing building
+          description: Name of location
+        locationType:
+          type: string
+          description: Type of location
+          enum:
+            - Building
+            - Room
+            - Outdoor
+            - Cargo Bay
 
-
+    locations:
+      required:
+        - locationId
+        - locationName
+        - locationType
+      type: object
+      properties:
+        locationId:
+          type: integer
+          format: int16
+          example: 12568
+          description: Location identifier
+        locationName:
+          type: string
+          example: Manufacturing building
+          description: Name of location
+        locationType:
+          type: string
+          description: Type of location
+          enum:
+            - Building
+            - Room
+            - Outdoor
+            - Cargo Bay
