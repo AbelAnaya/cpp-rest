@@ -10,7 +10,7 @@ CREATE TABLE locations (
 	location_id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
     location_name VARCHAR(255) NOT NULL,
     location_type ENUM ("Building", "Room", "Outdoor", "Cargo bay") NOT NULL,
-    device_count INT DEFAULT 0
+    device_count INT UNSIGNED DEFAULT 0
 );
 
 DROP TABLE IF EXISTS devices;
