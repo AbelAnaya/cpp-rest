@@ -1,31 +1,16 @@
-#include <cpprest/http_listener.h>
-#include <cpprest/json.h>
-
-using namespace web;
-using namespace web::http;
-using namespace web::http::experimental::listener;
+#include "crow.h"
+#include <string>
 
 int main() {
-    http_listener listener("http://localhost:8080/restdemo");
+    crow::SimpleApp app;
 
-    listener.support(methods::GET, [](http_request request) {
-        json::value response;
-        response["response"] = json::value::string("Hello from the REST API!");
+    CROW_ROUTE(app, "/devices/<int>")
+        ([](int serial_number) {
+            crow::json::wvalue x({{"message", "Hello World from REST API, device SN: " + std::to_string(serial_number)}});
+            return x;
+        });
 
-        request.reply(status_codes::OK, response);
-    });
-
-    try {
-        listener
-            .open()
-            .then([&listener]() { std::cout << "Starting to listen at: " << listener.uri().to_string() << std::endl; })
-            .wait();
-
-        while (true);
-    }
-    catch (std::exception const & e) {
-        std::cout << e.what() << std::endl;
-    }
+    app.multithreaded().run();
 
     return 0;
 }
