@@ -40,7 +40,7 @@ crow::response LocationManager::get_location_by_id(const int locationId)
 crow::response LocationManager::delete_location_by_id(const int locationId)
 {
     SQLClient& sql_client = SQLClient::getInstance();
-    const crow::status rc = sql_client.deleteLocation("locations", "location_id", std::to_string(locationId));
+    const crow::status rc = sql_client.deleteEntity("locations", "location_id", std::to_string(locationId));
 
     return crow::response(rc);
 }
