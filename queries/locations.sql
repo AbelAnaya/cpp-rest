@@ -1,1 +1,1 @@
-SELECT *, BIN_TO_UUID(location_id) as location_id FROM locations;
+SELECT * as location_id FROM locations;

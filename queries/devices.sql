@@ -1,1 +1,1 @@
-SELECT *, BIN_TO_UUID(serial_number) as sn FROM devices;
+SELECT * as sn FROM devices;
