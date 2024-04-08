@@ -106,7 +106,7 @@ static bool _check_id_exists
 SQLClient::SQLClient()
 {
     driver = get_driver_instance();
-    con = driver->connect("localhost:3306", "root", "2515");
+    con = driver->connect("localhost:3306", "root", "root");
 
     con->setSchema("rest_db");
 }
