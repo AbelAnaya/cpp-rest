@@ -2,7 +2,6 @@
  *
  ****/
 
-#include "crow.h"
 #include "Device_Manager.hpp"
 #include "SQL_Client.hpp"
 
