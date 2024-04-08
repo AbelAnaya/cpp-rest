@@ -4,7 +4,7 @@
 
 #include "Rest_Server.hpp"
 #include "Device_Manager.hpp"
-#include "crow.h"
+#include "Location_Manager.hpp"
 
 
 /*********************
@@ -63,6 +63,10 @@ int main()
     .add_route("/devices/<int>", crow::HTTPMethod::GET, (ResponseHandlerById_ft) DeviceManager::get_device_by_sn)
     .add_route("/devices/<int>", crow::HTTPMethod::DELETE, (ResponseHandlerById_ft) DeviceManager::delete_device_by_sn)
     .add_route("/devices/<int>/location", crow::HTTPMethod::PUT, (ResponseHandlerFull_ft) DeviceManager::put_device_by_sn)
+    .add_route("/locations", crow::HTTPMethod::GET, (ResponseHandler_ft) LocationManager::get_location)
+    .add_route("/locations", crow::HTTPMethod::POST, (ResponseHandler_ft) LocationManager::post_location)
+    .add_route("/locations/<int>", crow::HTTPMethod::GET, (ResponseHandlerById_ft) LocationManager::get_location_by_id)
+    .add_route("/locations/<int>", crow::HTTPMethod::DELETE, (ResponseHandlerById_ft) LocationManager::delete_location_by_id)
     .start();
 
     return 0;
