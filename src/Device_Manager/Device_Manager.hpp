@@ -1,5 +1,5 @@
 /***
- * 
+ *
  ****/
 
 #ifndef DEVICE_MANAGER_H
@@ -20,7 +20,7 @@ public:
 
     static crow::response delete_device_by_sn(const int serial_number);
 
-    static crow::response put_device_by_sn(const int serial_number);
+    static crow::response put_device_by_sn(const crow::request& req, const int serial_number);
 };
 
 
