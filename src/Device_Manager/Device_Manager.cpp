@@ -4,11 +4,17 @@
 
 #include "crow.h"
 #include "Device_Manager.hpp"
+#include "SQL_Client.hpp"
 
 
 crow::response DeviceManager::get_device(const crow::request& req)
 {
     std::ostringstream os;
+
+    SQLClient& sql_client = SQLClient::getInstance();
+
+    sql_client.selectQuery();
+
     os << "Params: " << req.url_params << "\n\n";
 
     if (req.url_params.get("type") != nullptr)

@@ -2,6 +2,9 @@
  * 
  ****/
 
+#ifndef REST_SERVER_H
+#define REST_SERVER_H
+
 #include "crow.h"
 
 
@@ -16,8 +19,12 @@ public:
 
     RestServer& start(void);
 
+
 private:
     std::string _ipAddress;
     std::uint16_t _port;
     crow::SimpleApp app;
 };
+
+
+#endif /* REST_SERVER_H */
