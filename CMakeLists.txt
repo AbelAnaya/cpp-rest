@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(cpp_rest)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 20)
 
 # Add debugging symbols
 set(CMAKE_BUILD_TYPE RelWithDebInfo)
@@ -21,4 +21,5 @@ include_directories(
 )
 
 add_executable(cpp_rest ${SOURCES})
+set_target_properties(cpp_rest PROPERTIES COMPILE_FLAGS -DCROW_JSON_USE_MAP)
 target_link_libraries(cpp_rest PRIVATE Crow::Crow crypto -lmysqlclient -lmysqlcppconn)
