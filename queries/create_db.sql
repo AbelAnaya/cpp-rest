@@ -7,7 +7,7 @@ USE rest_db;
 DROP TABLE IF EXISTS locations;
 
 CREATE TABLE locations (
-	location_id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
+	location_id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     location_name VARCHAR(255) NOT NULL,
     location_type ENUM ("Building", "Room", "Outdoor", "Cargo bay") NOT NULL,
     device_count INT UNSIGNED DEFAULT 0
@@ -16,7 +16,7 @@ CREATE TABLE locations (
 DROP TABLE IF EXISTS devices;
 
 CREATE TABLE devices (
-	serial_number BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
+	serial_number INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     device_name VARCHAR(255) NOT NULL,
     device_type ENUM("Sensor", "Actuator") NOT NULL,
     creation_date TIMESTAMP NOT NULL DEFAULT (NOW())
@@ -25,8 +25,8 @@ CREATE TABLE devices (
 DROP TABLE IF EXISTS device_location;
 
 CREATE TABLE device_location (
-	device_sn BINARY(16) NOT NULL PRIMARY KEY,
-    location_id BINARY(16) NOT NULL,
+	device_sn INT UNSIGNED NOT NULL PRIMARY KEY,
+    location_id INT UNSIGNED NOT NULL,
     FOREIGN KEY (device_sn) REFERENCES devices(serial_number),
     FOREIGN KEY (location_id) REFERENCES locations(location_id)
 );

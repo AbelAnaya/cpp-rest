@@ -2,22 +2,22 @@
 // Docs: https://dbml.dbdiagram.io/docs
 
 Table devices {
-  serial_number binary [primary key]
+  serial_number int [primary key]
   device_name varchar
   device_type enum
   creation_date timestamp
 }
 
 Table locations {
-  location_id binary [primary key]
+  location_id int [primary key]
   location_name varchar
   location_type enum
   device_count int
 }
 
 Table device_location {
-  device_sn binary [primary key]
-  location_id binary
+  device_sn int [primary key]
+  location_id int
 }
 
 Ref: devices.serial_number - device_location.device_sn // one-to-one
