@@ -1,5 +1,5 @@
 /***
- * 
+ *
  ****/
 
 #ifndef REST_SERVER_H

@@ -1,5 +1,5 @@
 /***
- * 
+ *
  ****/
 
 #include "Rest_Server.hpp"
@@ -13,6 +13,7 @@
 
 typedef std::function<crow::response(const crow::request&)> ResponseHandler_ft;
 typedef std::function<crow::response(const int)> ResponseHandlerById_ft;
+typedef std::function<crow::response(const crow::request&, const int)> ResponseHandlerFull_ft;
 
 
 /*************************
@@ -60,8 +61,8 @@ int main()
     .add_route("/devices", crow::HTTPMethod::GET, (ResponseHandler_ft) DeviceManager::get_device)
     .add_route("/devices", crow::HTTPMethod::POST, (ResponseHandler_ft) DeviceManager::post_device)
     .add_route("/devices/<int>", crow::HTTPMethod::GET, (ResponseHandlerById_ft) DeviceManager::get_device_by_sn)
-    .add_route("/devices/<int>", crow::HTTPMethod::DELETE, (ResponseHandlerById_ft) DeviceManager::get_device_by_sn)
-    .add_route("/devices/<int>/location", crow::HTTPMethod::PUT, (ResponseHandlerById_ft) DeviceManager::get_device_by_sn)
+    .add_route("/devices/<int>", crow::HTTPMethod::DELETE, (ResponseHandlerById_ft) DeviceManager::delete_device_by_sn)
+    .add_route("/devices/<int>/location", crow::HTTPMethod::PUT, (ResponseHandlerFull_ft) DeviceManager::put_device_by_sn)
     .start();
 
     return 0;
