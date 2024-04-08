@@ -1,4 +1,8 @@
 /***
+ * REST Server manager.
+ *
+ * This class is reponsible for managing the REST Server, creating it and defining the endpoints.
+ * It contains the entry point to the SW.
  *
  ****/
 

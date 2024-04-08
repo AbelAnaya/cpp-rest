@@ -1,4 +1,7 @@
 /***
+ * Device entity manager.
+ *
+ * This class is responsible for handling devices request in the REST API.
  *
  ****/
 

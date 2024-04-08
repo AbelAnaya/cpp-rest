@@ -1,4 +1,7 @@
 /***
+ * REST Server public interface.
+ *
+ * Defines the methods available for the REST Server class.
  *
  ****/
 

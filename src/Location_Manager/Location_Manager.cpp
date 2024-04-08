@@ -1,4 +1,7 @@
 /***
+ * Location entity manager.
+ *
+ * This class is responsible for handling locations request in the REST API.
  *
  ****/
 

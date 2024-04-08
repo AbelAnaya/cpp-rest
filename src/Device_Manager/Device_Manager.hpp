@@ -1,4 +1,8 @@
 /***
+ * Device Manager public interface.
+ *
+ * Defines the methods available to the REST Server to handle endpoint requests.
+ * All methods are defined as static so no instance of the class is required.
  *
  ****/
 

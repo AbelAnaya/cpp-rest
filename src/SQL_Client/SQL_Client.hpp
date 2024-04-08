@@ -1,4 +1,8 @@
 /**
+ * Public interface of SQLClient class
+ *
+ * Defines the methods available for any class that needs to interact
+ * with the DB.
  *
  **/
 
