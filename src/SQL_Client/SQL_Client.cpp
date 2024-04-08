@@ -178,7 +178,7 @@ crow::status SQLClient::postDevice(const crow::json::rvalue& parameters)
 }
 
 
-crow::status SQLClient::deleteDevice(const std::string& table, const std::string& column, const std::string& id)
+crow::status SQLClient::deleteEntity(const std::string& table, const std::string& column, const std::string& id)
 {
     std::string query = "DELETE FROM " + table + " WHERE " + column + " = " + id;
     std::unique_ptr<sql::Statement> stmt(con->createStatement());
@@ -302,6 +302,107 @@ crow::response SQLClient::getAllDevices(const crow::request& req)
                 {"name", (std::string) res->getString("device_name")},
                 {"type", (std::string) res->getString("device_type")},
                 {"creationDate", (std::string) res->getString("creation_date")},
+                {"locationId", res->getInt("location_id")},
+                {"locationName", (std::string) res->getString("location_name")},
+                {"locationType", (std::string) res->getString("location_type")},
+            }
+        );
+
+        body_response.push_back(device_item);
+
+        iteration++;
+    }
+
+    return (crow::json::wvalue) body_response;
+}
+
+
+crow::status SQLClient::postLocation(const crow::json::rvalue& parameters)
+{
+    std::string query = "INSERT INTO locations VALUES("
+                        + std::to_string(parameters["locationId"].i()) + ", \""
+                        + (std::string) parameters["locationName"].s() + "\", \""
+                        + (std::string) parameters["locationType"].s() + "\")";
+
+    std::unique_ptr<sql::Statement> stmt(con->createStatement());
+
+    bool exec_status = false;
+
+    try
+    {
+        stmt->execute(query);
+
+        exec_status = true;
+    }
+    catch (sql::SQLException &e)
+    {
+        std::cout << "# ERR: SQLException in " << __FILE__;
+        std::cout << " (" << __FUNCTION__ << ") on line " << __LINE__ << std::endl;
+        std::cout << "# ERR: " << e.what();
+        std::cout << " (MySQL error code: " << e.getErrorCode();
+        std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+
+        exec_status = false;
+    }
+
+    return exec_status ? crow::status::OK : crow::status::BAD_REQUEST;
+}
+
+
+crow::response SQLClient::getLocation(const int id)
+{
+    std::string query = "SELECT location_id, location_name, location_type FROM locations \
+     WHERE location_id = " + std::to_string(id);
+
+    std::cout << "Query: " + query << std::endl;
+
+    std::unique_ptr<sql::Statement> stmt(con->createStatement());
+    std::unique_ptr<sql::ResultSet> res(stmt->executeQuery(query));
+
+    if (res->rowsCount() > 0)
+    {
+        res->next();
+
+        crow::json::wvalue body_response({
+            {"locationId", res->getInt("location_id")},
+            {"locationName", (std::string) res->getString("location_name")},
+            {"locationType", (std::string) res->getString("location_type")},
+        });
+
+        return crow::response(crow::status::OK, body_response);
+    }
+    else
+    {
+        return crow::response(crow::status::NOT_FOUND);
+    }
+}
+
+
+crow::response SQLClient::getAllLocations(const crow::request& req)
+{
+    std::string query = "SELECT location_id, location_name, location_type FROM locations";
+
+    int n_params = req.url_params.keys().size();
+
+    if (n_params != 0) {
+        query += " WHERE ";
+
+        _add_string_filter_to_query(query, req, "location_name", "locationName", n_params);
+        _add_string_filter_to_query(query, req, "location_type", "locationType", n_params);
+    }
+
+    std::cout << "Query: " + query << std::endl;
+
+    std::unique_ptr<sql::Statement> stmt(con->createStatement());
+    std::unique_ptr<sql::ResultSet> res(stmt->executeQuery(query));
+
+    std::vector<crow::json::wvalue> body_response;
+    int iteration = 0;
+
+    while(res->next())
+    {
+        crow::json::wvalue device_item(
+            {
                 {"locationId", res->getInt("location_id")},
                 {"locationName", (std::string) res->getString("location_name")},
                 {"locationType", (std::string) res->getString("location_type")},

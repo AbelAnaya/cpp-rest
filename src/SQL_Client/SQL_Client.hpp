@@ -29,11 +29,19 @@ public:
 
     static SQLClient& getInstance();
 
+    /* Device management */
     crow::status postDevice(const crow::json::rvalue& parameters);
-    crow::status deleteDevice(const std::string& table, const std::string& column, const std::string& id);
     crow::status putDevice(int serial_number, const crow::json::rvalue& parameters);
     crow::response getDevice(const int id);
     crow::response getAllDevices(const crow::request& req);
+
+    /* Location management */
+    crow::status postLocation(const crow::json::rvalue& parameters);
+    crow::response getLocation(const int id);
+    crow::response getAllLocations(const crow::request& req);
+
+    /* Common functions */
+    crow::status deleteEntity(const std::string& table, const std::string& column, const std::string& id);
 };
 
 
