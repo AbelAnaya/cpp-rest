@@ -216,9 +216,27 @@ crow::status SQLClient::putDevice(int serial_number, int locationId)
         std::unique_ptr<sql::Statement> stmt(con->createStatement());
         stmt->execute(query);
 
-        const int affectedRows = stmt->getUpdateCount();
+        crow::status exec_status = crow::status::BAD_REQUEST;
 
-        return affectedRows > 0 ? crow::status::OK : crow::status::BAD_REQUEST;
+        try
+        {
+            stmt->execute(query);
+
+            exec_status = crow::status::OK;
+        }
+        catch (sql::SQLException &e)
+        {
+            std::cout << "# ERR: SQLException in " << __FILE__;
+            std::cout << " (" << __FUNCTION__ << ") on line " << __LINE__ << std::endl;
+            std::cout << "# ERR: " << e.what();
+            std::cout << " (MySQL error code: " << e.getErrorCode();
+            std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+
+            exec_status = crow::status::BAD_REQUEST;
+        }
+
+
+        return exec_status;
     }
     else
     {
