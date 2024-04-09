@@ -50,7 +50,7 @@ paths:
           required: false
           schema:
             type: integer
-            format: int16
+            format: uint32
         - name: locationName
           in: query
           description: Device location name filter for query.
@@ -104,7 +104,7 @@ paths:
           required: true
           schema:
             type: integer
-            format: int16
+            format: uint32
       responses:
         '200':
           description: Successful operation
@@ -129,7 +129,7 @@ paths:
           required: true
           schema:
             type: integer
-            format: int16
+            format: uint32
       responses:
         '200':
           description: Successful operation
@@ -150,7 +150,8 @@ paths:
           description: Serial Number of device to update
           required: true
           schema:
-            type: string
+            type: integer
+            format: uint32
       requestBody:
         content:
           application/json:
@@ -177,7 +178,7 @@ paths:
           required: false
           schema:
             type: integer
-            format: int16
+            format: uint32
         - name: locationName
           in: query
           description: Location name filter for query.
@@ -231,7 +232,7 @@ paths:
           required: true
           schema:
             type: integer
-            format: int16
+            format: uint32
       responses:
         '200':
           description: Successful operation
@@ -256,7 +257,7 @@ paths:
           required: true
           schema:
             type: integer
-            format: int16
+            format: uint32
       responses:
         '200':
           description: Successful operation
@@ -276,7 +277,7 @@ components:
       properties:
         locationId:
           type: integer
-          format: int16
+          format: uint32
           example: 12568
           description: Location identifier where device is placed
 
@@ -289,7 +290,7 @@ components:
       properties:
         serialNumber:
           type: integer
-          format: int16
+          format: uint32
           example: 48356
           description: Serial Number of device
         name:
@@ -304,7 +305,7 @@ components:
             - Actuator
         locationId:
           type: integer
-          format: int16
+          format: uint32
           example: 12568
           description: Location identifier where device is placed
 
@@ -321,7 +322,7 @@ components:
       properties:
         serialNumber:
           type: integer
-          format: int16
+          format: uint32
           example: 48356
           description: Serial Number of device
         name:
@@ -340,7 +341,7 @@ components:
           example: "2024-04-02 14:39:45"
         locationId:
           type: integer
-          format: int16
+          format: uint32
           example: 12568
           description: Location identifier where device is placed
         locationName:
@@ -365,7 +366,7 @@ components:
       properties:
         locationId:
           type: integer
-          format: int16
+          format: uint32
           example: 12568
           description: Location identifier
         locationName:
