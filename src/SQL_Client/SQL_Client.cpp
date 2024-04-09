@@ -319,7 +319,7 @@ crow::response SQLClient::getAllDevices(const crow::request& req)
 
 crow::status SQLClient::postLocation(const crow::json::rvalue& parameters)
 {
-    std::string query = "INSERT INTO locations VALUES("
+    std::string query = "INSERT INTO locations (location_id, location_name, location_type) VALUES("
                         + std::to_string(parameters["locationId"].i()) + ", \""
                         + (std::string) parameters["locationName"].s() + "\", \""
                         + (std::string) parameters["locationType"].s() + "\")";
