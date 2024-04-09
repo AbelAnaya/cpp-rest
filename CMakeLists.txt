@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(cpp_rest)
+project(fdm)
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -22,6 +22,6 @@ include_directories(
     src/SQL_Client
 )
 
-add_executable(cpp_rest ${SOURCES})
-set_target_properties(cpp_rest PROPERTIES COMPILE_FLAGS -DCROW_JSON_USE_MAP)
-target_link_libraries(cpp_rest PRIVATE Crow::Crow crypto -lmysqlclient -lmysqlcppconn)
+add_executable(fdm ${SOURCES})
+set_target_properties(fdm PROPERTIES COMPILE_FLAGS -DCROW_JSON_USE_MAP)
+target_link_libraries(fdm PRIVATE Crow::Crow crypto -lmysqlclient -lmysqlcppconn)

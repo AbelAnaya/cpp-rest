@@ -19,4 +19,4 @@ RUN dpkg -i crow-v1.0.deb
 RUN cmake -S . -B build/
 RUn make -C build/
 
-CMD ["/app/build/cpp_rest"]
+CMD ["/app/build/fdm"]
