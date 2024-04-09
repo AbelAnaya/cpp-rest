@@ -49,3 +49,21 @@ BEGIN
 	UPDATE locations SET device_count = device_count - 1
 	WHERE location_id = OLD.location_id;
 END $$
+
+DELIMITER $$
+CREATE TRIGGER update_device_count_decrease
+AFTER UPDATE ON device_location
+FOR EACH ROW
+BEGIN
+    UPDATE locations SET device_count = device_count - 1
+    WHERE location_id = OLD.location_id;
+END $$
+
+DELIMITER $$
+CREATE TRIGGER update_device_count_increase
+AFTER UPDATE ON device_location
+FOR EACH ROW
+BEGIN
+    UPDATE locations SET device_count = device_count + 1
+    WHERE location_id = NEW.location_id;
+END $$
