@@ -67,3 +67,7 @@ BEGIN
     UPDATE locations SET device_count = device_count + 1
     WHERE location_id = NEW.location_id;
 END $$
+
+/* Indexes */
+CREATE INDEX device_name_idx ON devices(device_name);
+CREATE INDEX location_name_idx ON locations(location_name);

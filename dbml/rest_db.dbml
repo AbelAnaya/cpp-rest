@@ -6,6 +6,10 @@ Table devices {
   device_name varchar
   device_type enum
   creation_date timestamp
+
+  indexes {
+      device_name
+  }
 }
 
 Table locations {
@@ -13,6 +17,10 @@ Table locations {
   location_name varchar
   location_type enum
   device_count int
+
+  indexes {
+      location_name
+  }
 }
 
 Table device_location {
