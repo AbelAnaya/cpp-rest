@@ -178,9 +178,9 @@ crow::status SQLClient::postDevice(const crow::json::rvalue& parameters)
 }
 
 
-crow::status SQLClient::deleteEntity(const std::string& table, const std::string& column, const std::string& id)
+crow::status SQLClient::deleteDevice(const std::string& id)
 {
-    std::string query = "DELETE FROM " + table + " WHERE " + column + " = " + id;
+    std::string query = "DELETE FROM devices WHERE serial_number = " + id;
     std::unique_ptr<sql::Statement> stmt(con->createStatement());
 
     stmt->execute(query);
@@ -227,6 +227,32 @@ crow::status SQLClient::putDevice(int serial_number, const crow::json::rvalue& p
     }
 
 }
+
+
+crow::status SQLClient::deleteLocation(int id)
+{
+    const bool location_has_device = _check_id_exists(con, id, "device_location", "location_id");
+
+    std::string query_delete_location = "DELETE FROM locations WHERE location_id = " + std::to_string(id);
+
+    std::unique_ptr<sql::Statement> stmt(con->createStatement());
+
+    // Remove relation from any device in device_location
+    if (location_has_device)
+    {
+        std::string query_delete_device_location = "DELETE FROM device_location WHERE location_id = "
+                                                                    + std::to_string(id);
+        stmt->execute(query_delete_device_location);
+    }
+
+    // Remove location
+    stmt->execute(query_delete_location);
+
+    const int affectedRows = stmt->getUpdateCount();
+
+    return affectedRows > 0 ? crow::status::OK : crow::status::NOT_FOUND;
+}
+
 
 crow::response SQLClient::getDevice(const int id)
 {

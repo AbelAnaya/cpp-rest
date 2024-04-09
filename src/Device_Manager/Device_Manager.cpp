@@ -40,7 +40,7 @@ crow::response DeviceManager::get_device_by_sn(const int serial_number)
 crow::response DeviceManager::delete_device_by_sn(const int serial_number)
 {
     SQLClient& sql_client = SQLClient::getInstance();
-    const crow::status rc = sql_client.deleteEntity("devices", "serial_number", std::to_string(serial_number));
+    const crow::status rc = sql_client.deleteDevice(std::to_string(serial_number));
 
     return crow::response(rc);
 }
