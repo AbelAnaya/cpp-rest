@@ -35,7 +35,7 @@ public:
 
     /* Device management */
     crow::status postDevice(const crow::json::rvalue& parameters);
-    crow::status putDevice(int serial_number, const crow::json::rvalue& parameters);
+    crow::status putDevice(int serial_number, int locationId);
     crow::response getDevice(const int id);
     crow::response getAllDevices(const crow::request& req);
     crow::status deleteDevice(const std::string& id);

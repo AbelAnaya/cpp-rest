@@ -55,7 +55,7 @@ crow::response DeviceManager::put_device_by_sn(const crow::request& req, const i
 
     SQLClient& sql_client = SQLClient::getInstance();
 
-    const crow::status rc = sql_client.putDevice(serial_number, json_body);
+    const crow::status rc = sql_client.putDevice(serial_number, json_body["locationId"].i());
 
     return crow::response(rc);
 }

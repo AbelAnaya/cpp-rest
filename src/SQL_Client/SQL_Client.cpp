@@ -128,21 +128,34 @@ SQLClient& SQLClient::getInstance()
 
 crow::status SQLClient::postDevice(const crow::json::rvalue& parameters)
 {
-    std::string query = "INSERT INTO devices VALUES("
-                        + std::to_string(parameters["serialNumber"].i()) + ", \""
-                        + (std::string) parameters["name"].s() + "\", \""
-                        + (std::string) parameters["type"].s() + "\", "
-                        + "NOW())";
+    bool device_exists = _check_id_exists(con, parameters["serialNumber"].i(), "devices", "serial_number");
+
+    std::string query = "";
+
+    if (device_exists)
+    {
+        query += "UPDATE devices SET device_name = \"" + (std::string) parameters["name"].s()
+            + "\", device_type = \"" + (std::string) parameters["type"].s()
+            + "\" WHERE serial_number = " + std::to_string(parameters["serialNumber"].i());
+    }
+    else
+    {
+        query += "INSERT INTO devices VALUES("
+            + std::to_string(parameters["serialNumber"].i()) + ", \""
+            + (std::string) parameters["name"].s() + "\", \""
+            + (std::string) parameters["type"].s() + "\", "
+            + "NOW())";
+    }
 
     std::unique_ptr<sql::Statement> stmt(con->createStatement());
 
-    bool exec_status = false;
+    crow::status exec_status = crow::status::BAD_REQUEST;
 
     try
     {
         stmt->execute(query);
 
-        exec_status = true;
+        exec_status = crow::status::OK;
     }
     catch (sql::SQLException &e)
     {
@@ -152,29 +165,16 @@ crow::status SQLClient::postDevice(const crow::json::rvalue& parameters)
         std::cout << " (MySQL error code: " << e.getErrorCode();
         std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
 
-        exec_status = false;
+        exec_status = crow::status::BAD_REQUEST;
     }
 
     if ((exec_status) && (parameters.has("locationId")))
     {
-        const bool loc_exists = _check_id_exists(con, parameters["locationId"].i(), "locations", "location_id");
-
-        if (loc_exists)
-        {
-            // Insert relation in device_location table
-            stmt->execute("INSERT INTO device_location VALUES(" + std::to_string(parameters["serialNumber"].i())
-                                                                + ", "
-                                                                + std::to_string(parameters["locationId"].i())
-                                                                + ")");
-            exec_status = true;
-        }
-        else
-        {
-            exec_status = false;
-        }
+        // Add location to device reusing putDevice method
+        exec_status = putDevice(parameters["serialNumber"].i(), parameters["locationId"].i());
     }
 
-    return exec_status ? crow::status::OK : crow::status::BAD_REQUEST;
+    return exec_status;
 }
 
 
@@ -191,9 +191,8 @@ crow::status SQLClient::deleteDevice(const std::string& id)
 }
 
 
-crow::status SQLClient::putDevice(int serial_number, const crow::json::rvalue& parameters)
+crow::status SQLClient::putDevice(int serial_number, int locationId)
 {
-    const int locationId = parameters["locationId"].i();
     const bool device_exists = _check_id_exists(con, serial_number, "devices", "serial_number");
     const bool location_exists = _check_id_exists(con, locationId, "locations", "location_id");
 
@@ -345,10 +344,22 @@ crow::response SQLClient::getAllDevices(const crow::request& req)
 
 crow::status SQLClient::postLocation(const crow::json::rvalue& parameters)
 {
-    std::string query = "INSERT INTO locations (location_id, location_name, location_type) VALUES("
-                        + std::to_string(parameters["locationId"].i()) + ", \""
-                        + (std::string) parameters["locationName"].s() + "\", \""
-                        + (std::string) parameters["locationType"].s() + "\")";
+    bool location_exists = _check_id_exists(con, parameters["locationId"].i(), "locations", "location_id");
+    std::string query = "";
+
+    if (location_exists)
+    {
+        query += "UPDATE locations SET location_name = \"" + (std::string) parameters["locationName"].s()
+            + "\", location_type = \"" + (std::string) parameters["locationType"].s()
+            + "\" WHERE location_id = " + std::to_string(parameters["locationId"].i());
+    }
+    else
+    {
+        query += "INSERT INTO locations (location_id, location_name, location_type) VALUES("
+            + std::to_string(parameters["locationId"].i()) + ", \""
+            + (std::string) parameters["locationName"].s() + "\", \""
+            + (std::string) parameters["locationType"].s() + "\")";
+    }
 
     std::unique_ptr<sql::Statement> stmt(con->createStatement());
 
