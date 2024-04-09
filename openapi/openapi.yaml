@@ -172,13 +172,6 @@ paths:
       summary: Lists existing locations
       description: Lists existing locations
       parameters:
-        - name: locationId
-          in: query
-          description: Location identifier filter for query.
-          required: false
-          schema:
-            type: integer
-            format: uint32
         - name: locationName
           in: query
           description: Location name filter for query.
