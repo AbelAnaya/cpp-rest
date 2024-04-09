@@ -60,7 +60,7 @@ RestServer& RestServer::start(void)
 int main()
 {
     DeviceManager device_manager;
-    RestServer server("127.0.0.1", 8080);
+    RestServer server("0.0.0.0", 8080);
     server
     .add_route("/devices", crow::HTTPMethod::GET, (ResponseHandler_ft) DeviceManager::get_device)
     .add_route("/devices", crow::HTTPMethod::POST, (ResponseHandler_ft) DeviceManager::post_device)
